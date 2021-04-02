@@ -13,6 +13,16 @@
 `$ npm install marked`
 
 
+necessario:
+selenium
+BeautifulSoup
+
+
+
+Ainda precisa fazer:
+Precisa criar o criador de banco quando a aplicacao for iniciada a primeira vez
+precisa deixar as threads independentes
+
 
 ##Markdown extras
 
