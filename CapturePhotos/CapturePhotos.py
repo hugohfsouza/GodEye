@@ -15,11 +15,8 @@ import face_recognition
 import uuid
 import configparser
 
-
 Config = configparser.ConfigParser()
 Config.read("./../config.ini")
-
-
 
 # CONFIGS
 PATH        = Config.get('Selenium', 'folderDriveSelenium')
@@ -42,7 +39,6 @@ def fazerLogin():
     elem.send_keys(Keys.RETURN)
     time.sleep(10)
 
-
 def acessarPaginaFotos(link):
     driver.get(link+str("/photos_all"))
     bancoDados.atualizarParaBuscando(link)
@@ -50,16 +46,13 @@ def acessarPaginaFotos(link):
     for x in range(0,NUMBSCROLL):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1);
-
     # time.sleep(30000);
-
 
 def criarPastaPerfil(nome, id):
     pasta = FOLDER+str(id)
 
     if not  os.path.isdir(pasta):
         os.mkdir(pasta)
-
 
 def capturarFotos(nome, id):
     elem = driver.find_element_by_xpath("//*")
@@ -91,10 +84,6 @@ def capturarFotos(nome, id):
                 
                 pasta = pasta+"/"+filename
                 pil_image.save(pasta, "PNG")
-
-
-            
-
         except:
             print("error")
             pass
@@ -104,14 +93,9 @@ def capturarFotos(nome, id):
         except:
             pass
         
-
-
-
-
 driver = webdriver.Chrome(PATH)
 driver.get("http://www.facebook.com.br")
 fazerLogin();
-
 
 while True:
     people = bancoDados.getProximoPerfilReconhecimento()

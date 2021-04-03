@@ -26,7 +26,7 @@ Após a execucao deste módulo, o arquivo do sqlite tera uma tabela com 2 campos
 
 
 ### 2. CapturePhotos
-Este modulo é responsável por capturar as fotos do perfil da pessoa, encontros os rostos e salvar apenas os rostos em pastas separadas
+Este modulo é responsável por capturar as fotos do perfil da pessoa, encontrar os rostos e salvar apenas os rostos em pastas separadas
 
 ```console
 $ cd CapturePhotos

@@ -37,13 +37,11 @@ class DBControl():
         """)
         self.novoPerfil(Config.get('FacebookAccount', 'myName') ,  Config.get('FacebookAccount', 'myPerfil') )
         
-
     def novoPerfil(self, nome, link):
         if(not self.verificaPerfilExistente(link)):
             self.cursor.execute("""INSERT INTO pessoas (nome, linkFacebook) VALUES (?,?)""", (nome, link) )
             self.conn.commit()
             # self.conn.close()
-
 
     def getProximoPerfil(self):
         retorno = "";
@@ -52,8 +50,6 @@ class DBControl():
             retorno = linha[0]
 
         return retorno;
-
-
 
     def getProximoPerfilReconhecimento(self):
         retorno = "";
@@ -76,13 +72,3 @@ class DBControl():
     def atualizarParaBuscando(self, link):
         self.cursor.execute("""UPDATE pessoas SET fotoPerfilAnalisada = 1 WHERE linkFacebook = ? """, [link] )
         self.conn.commit()
-
-
-
-
-# gerenciador = DBControl();
-# gerenciador.criarBanco();
-
-
-        
-
