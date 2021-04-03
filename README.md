@@ -36,3 +36,17 @@ $ python3 CapturePhotos.py
 ```
 
 Após a execucao deste módulo, será criada uma pasta para cada perfil. E cada pasta irá conter os rostos encontrados no respectivo perfil
+
+
+## Limites do projeto
+Segue os dados que o projeto NÃO faz:
+- Compartilhar informações com terceiros
+- Compartilhar qualquer tipo de informação
+
+
+
+
+## Arquitetura Básica
+Este é um diagrama básico da aplicação
+
+![alt text](https://raw.githubusercontent.com/hugohfsouza/GodEye/main/Documentation/DiagramGodEye.png?raw=true)
