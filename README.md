@@ -23,3 +23,16 @@ $ python3 CapturaProfile.py
 ```
 
 Após a execucao deste módulo, o arquivo do sqlite tera uma tabela com 2 campos preenchidos: nome e link. Dessa forma, os outros módulos irão analisar e capturar as informações 
+
+
+### 2. CapturePhotos
+Este modulo é responsável por capturar as fotos do perfil da pessoa, encontros os rostos e salvar apenas os rostos em pastas separadas
+
+```console
+$ cd CapturePhotos
+```
+```console
+$ python3 CapturePhotos.py
+```
+
+Após a execucao deste módulo, será criada uma pasta para cada perfil. E cada pasta irá conter os rostos encontrados no respectivo perfil
