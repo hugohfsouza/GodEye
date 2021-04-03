@@ -1,5 +1,5 @@
 # Contributing
-Quando quiser contribuir com este projeto, primeiro discute a alteração no Issue Tracker para que não haja duas pessoas implementando ou mexendo na mesma parte do código. Ficaremos muito felizes em receber ajuda.
+Quando quiser contribuir com este projeto, primeiro abra uma discussão sobre a alteração no Issue Tracker para que não haja duas pessoas implementando ou mexendo na mesma parte do código. Ficaremos muito felizes em receber ajuda.
 
 
 ## Processo de abertura de Pull Requests
