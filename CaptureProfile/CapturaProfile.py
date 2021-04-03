@@ -15,6 +15,7 @@ Config.read("./../config.ini")
 PATH        = Config.get('Selenium', 'folderDriveSelenium')
 EMAIL       = Config.get('FacebookAccount', 'email')
 PASSWORD    = Config.get('FacebookAccount', 'password')
+NUMBSCROLL  = int(Config.get('Application', 'scroll'))
 
 
 # Conexao com Banco
@@ -52,10 +53,10 @@ def recuperarPessoas(sourceCode):
 
 def acessarPaginaAmigos(link):
     driver.get(link+str("/friends"))
-    bancoDados.atualizarParaBuscando(link)
+    bancoDados.atualizarParaAmigosAnalisados(link)
     time.sleep(3);
 
-    for x in range(0,10):
+    for x in range(0,NUMBSCROLL):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1);
 

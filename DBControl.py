@@ -15,6 +15,33 @@ class DBControl():
 
         self.verifyDatabase();
 
+        self.verifyAlterDatabase();
+
+    def verifyAlterDatabase(self):
+        try:
+            self.cursor.execute("""
+            ALTER TABLE pessoas  ADD COLUMN generatedPhotoData Boolean default 0;
+            """)
+        except print(0):
+            pass
+
+        try:
+            self.cursor.execute("""
+            ALTER TABLE pessoas  ADD COLUMN names longtext;
+            """)
+        except print(0):
+            pass
+
+        try:
+            self.cursor.execute("""
+            ALTER TABLE pessoas  ADD COLUMN encoding longtext; 
+            """)
+        except print(0):
+            pass
+
+
+
+
     def verifyDatabase(self):
         exist = False
         linhas = self.cursor.execute("""SELECT name FROM sqlite_master WHERE type='table' AND name='pessoas';""")
@@ -23,9 +50,10 @@ class DBControl():
             exist = True
         
         if(not exist):
-            self.criarBanco();
+            self.criaTabelaPessoas();
 
-    def criarBanco(self):
+
+    def criaTabelaPessoas(self):
         self.cursor.execute("""
         CREATE TABLE pessoas (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +64,7 @@ class DBControl():
         );
         """)
         self.novoPerfil(Config.get('FacebookAccount', 'myName') ,  Config.get('FacebookAccount', 'myPerfil') )
-        
+
 
     def novoPerfil(self, nome, link):
         if(not self.verificaPerfilExistente(link)):
@@ -63,6 +91,14 @@ class DBControl():
 
         return retorno;
 
+    def getNextPerfilForAnalyzer(self):
+        retorno = "";
+        linhas = self.cursor.execute("""SELECT linkFacebook, id, nome FROM pessoas where generatedPhotoData = 0 limit 1; """)
+        for linha in self.cursor.fetchall():
+            retorno = linha
+
+        return retorno;
+
     def verificaPerfilExistente(self, link):
         linhas = self.cursor.execute("""
         SELECT 1 FROM pessoas where linkFacebook = ? 
@@ -72,9 +108,17 @@ class DBControl():
             return False
         else:
             return True
+        
+    def atualizarParaAmigosAnalisados(self, link):
+        self.cursor.execute("""UPDATE pessoas SET novo = 0 WHERE linkFacebook = ? """, [link] )
+        self.conn.commit()
 
     def atualizarParaBuscando(self, link):
         self.cursor.execute("""UPDATE pessoas SET fotoPerfilAnalisada = 1 WHERE linkFacebook = ? """, [link] )
+        self.conn.commit()
+
+    def updateFieldPhotoData(self, id):
+        self.cursor.execute("""UPDATE pessoas SET fotoPerfilAnalisada = 1 WHERE id = ? """, [id] )
         self.conn.commit()
 
 

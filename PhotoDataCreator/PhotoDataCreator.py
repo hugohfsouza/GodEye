@@ -2,16 +2,20 @@ import face_recognition
 from sklearn import svm
 import os
 import datetime
+import sys
 
+sys.path.append("../")
+from DBControl import DBControl
 
 encodings   = []
 names       = []
 
 PATHPERFIS = '../CapturePhotos/perfis/'
-
-print("Comecou" + str(datetime.datetime.now()))
-
 train_dir = os.listdir(PATHPERFIS)
+
+# Conexao com Banco
+bancoDados = DBControl();
+
 
 def codPerson(folder):
     return folder.split('-')[1]
@@ -31,19 +35,21 @@ for person in train_dir:
                     names.append(codPerson(person))
 
 
-clf = svm.SVC(gamma='scale')
-clf.fit(encodings,names)
+print(face_enc)
 
-print("Terminou" + str(datetime.datetime.now()))
+# clf = svm.SVC(gamma='scale')
+# clf.fit(encodings,names)
 
-test_image = face_recognition.load_image_file('foto.jpg')
+# print("Finish" + str(datetime.datetime.now()))
 
-
-face_locations = face_recognition.face_locations(test_image)
-no = len(face_locations)
+# test_image = face_recognition.load_image_file('foto.jpg')
 
 
-for i in range(no):
-    test_image_enc = face_recognition.face_encodings(test_image)[i]
-    idPerfil = clf.predict([test_image_enc])
-    print(idPerfil)
+# face_locations = face_recognition.face_locations(test_image)
+# no = len(face_locations)
+
+
+# for i in range(no):
+#     test_image_enc = face_recognition.face_encodings(test_image)[i]
+#     idPerfil = clf.predict([test_image_enc])
+#     print(idPerfil)

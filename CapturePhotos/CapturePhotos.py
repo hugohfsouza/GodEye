@@ -51,7 +51,6 @@ def acessarPaginaFotos(link):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1);
 
-    # time.sleep(30000);
 
 
 def criarPastaPerfil(nome, id):
