@@ -44,6 +44,10 @@ Segue os dados que o projeto NÃO faz:
 - Compartilhar qualquer tipo de informação
 
 
+## Deseja contribuir mas nao sabe como?
+
+Acompanhe a página de Issues. Lá você irá encontrar as atividades em aberto atualmente no projeto. 
+Não sabe programar ainda? Não se preocupe, há outros tipos de atividades que você pode nos ajudar. 
 
 
 ## Arquitetura Básica
