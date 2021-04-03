@@ -37,6 +37,9 @@ $ python3 CapturePhotos.py
 
 Após a execucao deste módulo, será criada uma pasta para cada perfil. E cada pasta irá conter os rostos encontrados no respectivo perfil
 
+### 3. PhotoDataCreator [EM CONTRUÇÃO]
+Este modulo é responsável mapear as caracteristicas dos rostos encontrados e armazenar uma hash.
+
 
 ## Limites do projeto
 Segue os dados que o projeto NÃO faz:
