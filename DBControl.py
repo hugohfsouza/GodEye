@@ -1,10 +1,8 @@
 import sqlite3
 import configparser
 
-
 Config = configparser.ConfigParser()
 Config.read("./../config.ini")
-# Config.read("./config.ini")
 
 class DBControl():
 
@@ -19,9 +17,6 @@ class DBControl():
 
     def verifyAlterDatabase(self):
         pass
-
-
-
 
     def verifyDatabase(self):
         exist = False
@@ -46,13 +41,11 @@ class DBControl():
         """)
         self.novoPerfil(Config.get('FacebookAccount', 'myName') ,  Config.get('FacebookAccount', 'myPerfil') )
 
-
     def novoPerfil(self, nome, link):
         if(not self.verificaPerfilExistente(link)):
             self.cursor.execute("""INSERT INTO pessoas (nome, linkFacebook) VALUES (?,?)""", (nome, link) )
             self.conn.commit()
             # self.conn.close()
-
 
     def getProximoPerfil(self):
         retorno = "";
@@ -98,15 +91,3 @@ class DBControl():
             result = people
         
         return result;
-
-
-    
-
-
-
-# gerenciador = DBControl();
-# gerenciador.criarBanco();
-
-
-        
-

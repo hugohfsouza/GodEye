@@ -17,10 +17,8 @@ EMAIL       = Config.get('FacebookAccount', 'email')
 PASSWORD    = Config.get('FacebookAccount', 'password')
 NUMBSCROLL  = int(Config.get('Application', 'scroll'))
 
-
 # Conexao com Banco
 bancoDados = DBControl();
-
 
 def fazerLogin():
     elem = driver.find_element_by_name("email")
@@ -50,7 +48,6 @@ def recuperarPessoas(sourceCode):
         except:
             print("error");
 
-
 def acessarPaginaAmigos(link):
     driver.get(link+str("/friends"))
     bancoDados.atualizarParaAmigosAnalisados(link)
@@ -60,13 +57,9 @@ def acessarPaginaAmigos(link):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1);
 
-
-
-
 driver = webdriver.Chrome(PATH)
 driver.get("http://www.facebook.com.br")
 fazerLogin();
-
 
 while True:
     link = bancoDados.getProximoPerfil()
@@ -79,6 +72,5 @@ while True:
     
     if not link:
         break
-
 
 driver.close()
