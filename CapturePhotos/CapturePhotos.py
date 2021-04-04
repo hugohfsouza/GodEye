@@ -54,13 +54,20 @@ def criarPastaPerfil(nome, id):
         os.mkdir(pasta)
 
 def capturarFotos(nome, id):
+    time.sleep(3)
     elem = driver.find_element_by_xpath("//*")
     source_code = elem.get_attribute("outerHTML")
     soup        = BeautifulSoup(source_code, 'html.parser')
     imageList = soup.find_all("img")
 
+    print(len(imageList))
+
+    
+    criarPastaPerfil(nome, id)
+    
     for foto in imageList:
         filename                = str(uuid.uuid4())+".jpg"
+        
         try:
             r                       = requests.get(foto.get('src'), stream = True)
             r.raw.decode_content    = True
@@ -71,20 +78,17 @@ def capturarFotos(nome, id):
             image           = face_recognition.load_image_file(filename)
             face_locations  = face_recognition.face_locations(image)
 
-            criarPastaPerfil(nome, id)
-
-            # time.sleep(3000000)
-            pasta = FOLDER+str(id)
             for face_location in face_locations:
+                pasta = FOLDER+str(id)+"/"+filename
+
                 top, right, bottom, left = face_location
                 face_image = image[top:bottom, left:right]
                 pil_image = Image.fromarray(face_image)
                 
                 
-                pasta = pasta+"/"+filename
                 pil_image.save(pasta, "PNG")
-        except:
-            print("error")
+        except Exception as e:
+            print(e)
             pass
             
         try:
@@ -98,8 +102,10 @@ fazerLogin();
 
 while True:
     people = bancoDados.getProximoPerfilReconhecimento()
+    
     acessarPaginaFotos(people[0]);
     capturarFotos(people[2], people[1]);
 
+    break;
     if not people[0]:
         break

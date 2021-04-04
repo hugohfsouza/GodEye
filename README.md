@@ -8,6 +8,7 @@ This app needs you install the following modules from PIP to work:
 - BeautifulSoup
 - configparser
 - sqlite3
+- progress (https://pypi.org/project/progress/)
 
 ## Support
 Looking for help? Check out the instructions for getting support.
