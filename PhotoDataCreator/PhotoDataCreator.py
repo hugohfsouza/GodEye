@@ -3,9 +3,11 @@ from sklearn import svm
 import os
 import datetime
 import sys
-import json
-from json import JSONEncoder
-import numpy
+from progress.bar import Bar
+
+
+encodings   = []
+names       = []
 
 sys.path.append("../")
 from DBControl import DBControl
@@ -13,52 +15,51 @@ from DBControl import DBControl
 # Conexao com Banco
 bancoDados = DBControl();
 
-PATHPERFIS = '../CapturePhotos/perfis/perfil-'
-
-class NumpyArrayEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, numpy.ndarray):
-            return obj.tolist()
-        return JSONEncoder.default(self, obj)
-
-def getDataFromPhotos(id):
-    folder      = PATHPERFIS+str(id)
-    encodings   = []
-    names       = []
-    
-    if(os.path.exists(folder)):
-        train_dir = os.listdir(folder)
-        try:
-            for person_img in train_dir:
-                if(person_img != ".DS_Store" and person_img != ".gitkeep" ):
-                    face = face_recognition.load_image_file(folder + "/" + person_img)
-                    face_bounding_boxes = face_recognition.face_locations(face)
-
-                    if len(face_bounding_boxes) == 1:
-                        face_enc = face_recognition.face_encodings(face)[0]
-                        encodings.append(face_enc)
-                        names.append(str(id))
-        except:
-            print("erro processamento das imagens")
-            pass
-    
-
-    return encodings,names
+PATHPERFIS  = '../CapturePhotos/perfis/'
+train_dir   = os.listdir(PATHPERFIS)
 
 
-while True:
-    registro = bancoDados.getNextPerfilForAnalyzer()
+def codPerson(folder):
+    return folder.split('-')[1]
 
-    if not registro:
-        break
+def countTotalFolder():
+    count = 0;
+    for person in train_dir:
+        count = count+1
+    return count;
+
+bar         = Bar('Analyzing photos from folders', max=countTotalFolder());
+
+for person in train_dir:
+    bar.next()
+    if(person != ".DS_Store" and person != ".gitkeep" ):
+        folderPerfil = os.listdir(PATHPERFIS+person)
+        
+        for person_img in folderPerfil:
+            if(person_img != ".DS_Store" and person_img != ".gitkeep" ):
+                face = face_recognition.load_image_file(PATHPERFIS + person + "/" + person_img)
+                face_bounding_boxes = face_recognition.face_locations(face)
+
+                if len(face_bounding_boxes) == 1:
+                    face_enc = face_recognition.face_encodings(face)[0]
+
+                    encodings.append(face_enc)
+                    names.append(codPerson(person))
+
+bar.finish()
+
+clf = svm.SVC(gamma='scale')
+clf.fit(encodings,names)
 
 
-    bancoDados.updateFieldPhotoData(registro[0]);
+imageSearch = face_recognition.load_image_file('foto.jpg')
 
-    (encodings, names)  = getDataFromPhotos(registro[0]);
-    jsonEncodings       = json.dumps(encodings, cls=NumpyArrayEncoder)
-    jsonNames           = json.dumps(names);
+face_locations = face_recognition.face_locations(imageSearch)
+no = len(face_locations)
 
-    bancoDados.registerEncodingsAndName(registro[0], jsonEncodings, jsonNames);
-
-    print("Perfil Analized: "+str(registro[0]))
+for i in range(no):
+    test_image_enc = face_recognition.face_encodings(imageSearch)[i]
+    idPerfil = clf.predict([test_image_enc])
+    if(idPerfil[0]):
+        people = bancoDados.getInformations(idPerfil[0])
+        print(people[0])

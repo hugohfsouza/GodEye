@@ -6,6 +6,7 @@ Para o funcionamento da aplicação, é necessário instalar os seguintes módul
 - BeautifulSoup
 - configparser
 - sqlite3
+- progress (https://pypi.org/project/progress/)
 
 ## Support
 Looking for help? Check out the instructions for getting support.
