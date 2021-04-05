@@ -10,7 +10,7 @@ This app needs you install the following modules from PIP to work:
 - sqlite3
 
 ## Support
-Looking for help? Check out the instructions for getting support.
+Looking for help? Access the issues page and check if your question has not already been asked. If not, feel free to create a new card with your question.
 
 # How to use
 ### 1. CapturaProfile
