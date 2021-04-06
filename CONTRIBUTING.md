@@ -1,11 +1,11 @@
 # Contributing
-Quando quiser contribuir com este projeto, primeiro abra uma discussão sobre a alteração no Issue Tracker para que não haja duas pessoas implementando ou mexendo na mesma parte do código. Ficaremos muito felizes em receber ajuda.
+When you want to contribute to this project, first open a discussion about the change in the Issue Tracker so that no two people are implementing or tampering with the same part of the code. We will be very happy to receive help.
 
 
 ## Processo de abertura de Pull Requests
-1. Faça o fork para sua conta do github.
-2. Faça a implementação seguindo os requisitos descritos neste link. Não são requisitos muitos difíceis, apenas nos ajudam a continuar o projeto da melhor forma possível.
-3. Crie um pull request
-4. Aguarde o feedback dos mantenedores e de outros contribuidores (incentivamos o máximo de revisores possíveis)
-5. Acompanhe e interaja com os feedbacks dados. (Ninguém possui a verdade absoluta)
-6. Assim que dois desenvolvedores marcarem como  "ok" no seu código, o PR será mesclada
+1. Fork your github account.
+2. Perform the implementation following the requirements described in this link. These are not very difficult requirements, they just help us to continue the project in the best possible way.
+3. Create a pull request
+4. Wait for feedback from maintainers and other contributors (we encourage as many reviewers as possible)
+5. Track and interact with the feedback given. (Nobody owns the absolute truth)
+6. As soon as two developers mark "ok" in their code, the PR will be merged
