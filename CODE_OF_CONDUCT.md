@@ -2,31 +2,30 @@
  
 ## Our Pledge
  
-Nós buscamos manter um ambiente aberto e acolhedor. Queremos disseminar o conhecimento e permitir que qualquer pessoa possa contribuir no projeto. Queremos uma comunidade livre de qualquer preconceito.
+We seek to maintain an open and welcoming environment. We want to disseminate knowledge and allow anyone to contribute to the project. We want a community free of any prejudice.
  
 ## Nossos Padrões
  
-Exemplos de comportamento que contribui para a criação de um ambiente positivo incluem:
- 
+Examples of behavior that contributes to creating a positive environment include:
 - Usando uma linguagem acolhedora e inclusiva
 - Respeitar os diferentes pontos de vista e experiências
 - Aceitando críticas construtivas com elegância
 - Foco no que é melhor para a comunidade
 - Mostrando empatia para com outros membros da comunidade
-- Exemplos de comportamento inaceitável por parte dos participantes incluem:
+
+Examples of unacceptable behavior on the part of the participants include:
+- The use of sexualized language or images and unwanted sexual advances or attention
+- Trolling comments, insults / derogatory and personal or political attacks
+- Public or private harassment
+- Publish private information from third parties, such as a physical or electronic address, without explicit permission
+- Another conduct that could reasonably be considered inappropriate in a professional environment
  
-O uso de linguagem ou imagens sexualizadas e atenção ou avanços sexuais indesejados
-- Comentários de trollagem, insultos / depreciativos e ataques pessoais ou políticos
-- Assédio público ou privado
-- Publicar informações privadas de terceiros, como um endereço físico ou eletrônico, sem permissão explícita
-- Outra conduta que poderia ser razoavelmente considerada inadequada em um ambiente profissional
+## Our Responsibilities
  
-## Nossas Responsabilidades
+Project maintainers are responsible for clarifying standards of acceptable behavior and must take appropriate and fair corrective actions in response to any instances of unacceptable behavior.
  
-Os mantenedores do projeto são responsáveis ​​por esclarecer os padrões de comportamento aceitável e devem tomar as ações corretivas adequadas e justas em resposta a quaisquer instâncias de comportamento inaceitável.
+Project maintainers have the right and responsibility to remove, edit or reject comments, commits, codes, wiki editions, issues and other contributions that are not in line with this Code of Conduct, or to temporarily or permanently ban any contributors for other behaviors that they consider inappropriate, threatening, offensive or harmful.
  
-Os mantenedores do projeto têm o direito e a responsabilidade de remover, editar ou rejeitar comentários, commits, códigos, edições de wiki, questões e outras contribuições que não estejam alinhadas a este Código de Conduta, ou banir temporária ou permanentemente qualquer contribuidor por outros comportamentos que eles consideram inadequados, ameaçadores, ofensivos ou prejudiciais.
+## Scope
  
-## Escopo
- 
-Este código de conduta se aplica a todas as partes deste repositório
+This code of conduct applies to all parts of this repository
