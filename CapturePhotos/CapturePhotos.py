@@ -53,6 +53,9 @@ def criarPastaPerfil(nome, id):
     if not  os.path.isdir(pasta):
         os.mkdir(pasta)
 
+def deletarFotosErradas(folder):
+    print(folder)
+
 def capturarFotos(nome, id):
     time.sleep(3)
     elem = driver.find_element_by_xpath("//*")
@@ -95,6 +98,8 @@ def capturarFotos(nome, id):
             os.remove(filename)
         except:
             pass
+
+    deletarFotosErradas(FOLDER+str(id))
         
 driver = webdriver.Chrome(PATH)
 driver.get("http://www.facebook.com.br")
@@ -102,7 +107,8 @@ fazerLogin();
 
 while True:
     people = bancoDados.getProximoPerfilReconhecimento()
-    
+    # people = ['https://www.facebook.com/romi.verruck', '4', 'Romi'];
+
     acessarPaginaFotos(people[0]);
     capturarFotos(people[2], people[1]);
 

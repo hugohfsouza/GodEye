@@ -9,6 +9,7 @@ This app needs you install the following modules from PIP to work:
 - configparser
 - sqlite3
 - progress (https://pypi.org/project/progress/)
+- flask (https://pypi.org/project/Flask/)
 
 ## Support
 Looking for help? Check out the instructions for getting support.
