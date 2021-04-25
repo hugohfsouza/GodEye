@@ -58,7 +58,7 @@ def acessarPaginaAmigos(link):
 
     for x in range(0,NUMBSCROLL):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(1);
+        time.sleep(0.5);
 
 driver = webdriver.Chrome(PATH)
 driver.get("http://www.facebook.com.br")

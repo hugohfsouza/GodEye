@@ -98,43 +98,49 @@ def deletarFotosErradas(folder):
 
 def saveImages(imageList, id, nome, tagLink):
     criarPastaPerfil(nome, id)
+    total = 0;
 
-    for foto in imageList:
-        if(foto.get('preserveaspectratio') == "xMidYMid slice" and foto.get('style') == "height: 168px; width: 168px;"):
-            filename                = "main.jpg"
-        else:
-            filename                = str(uuid.uuid4())+".jpg"
-    
-        try:
-            r                       = requests.get(foto.get(tagLink), stream = True)
-            r.raw.decode_content    = True
-
-            with open(filename,'wb') as f:
-                shutil.copyfileobj(r.raw, f)
-
-            image           = face_recognition.load_image_file(filename)
-            face_locations  = face_recognition.face_locations(image)
-
-            for face_location in face_locations:
-                pasta = FOLDER+str(id)+"/"+filename
-
-                top, right, bottom, left = face_location
-                face_image = image[top:bottom, left:right]
-                pil_image = Image.fromarray(face_image)
-                
-                
-                pil_image.save(pasta, "PNG")
-        except Exception as e:
-            print(e)
-            pass
+    try:
+        for foto in imageList:
+            if(total <= 100):
+                total = total+1
+                if(foto.get('preserveaspectratio') == "xMidYMid slice" and foto.get('style') == "height: 168px; width: 168px;"):
+                    filename                = "main.jpg"
+                else:
+                    filename                = str(uuid.uuid4())+".jpg"
             
-        try:
-            os.remove(filename)
-        except Exception as e:
-            print(e)
-            pass
+                try:
+                    r                       = requests.get(foto.get(tagLink), stream = True)
+                    r.raw.decode_content    = True
 
-    
+                    with open(filename,'wb') as f:
+                        shutil.copyfileobj(r.raw, f)
+
+                    image           = face_recognition.load_image_file(filename)
+                    face_locations  = face_recognition.face_locations(image)
+
+                    for face_location in face_locations:
+                        pasta = FOLDER+str(id)+"/"+filename
+
+                        top, right, bottom, left = face_location
+                        face_image = image[top:bottom, left:right]
+                        pil_image = Image.fromarray(face_image)
+                        
+                        
+                        pil_image.save(pasta, "PNG")
+                except Exception as e:
+                    print("error")
+                    pass
+                    
+                try:
+                    os.remove(filename)
+                except Exception as e:
+                    print("error")
+                    pass
+
+    except Exception as e:
+        print("error")
+        pass
 
 def capturarFotos(nome, id):
     time.sleep(3)
@@ -147,7 +153,7 @@ def capturarFotos(nome, id):
 
     x = threading.Thread(target=saveImages, args=(mageListImg, id, nome, "src"))
     x.start()
-    time.sleep(10)
+    time.sleep(2)
 
 
     
