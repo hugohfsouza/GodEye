@@ -75,6 +75,7 @@ def getInfo():
 
     id = request.args.get('id', default = -1, type = int)
 
+    print(id)
     if(id == -1):
         return app.response_class(
             response=json.dumps({}),

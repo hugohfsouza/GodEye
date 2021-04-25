@@ -50,6 +50,9 @@ def recuperarPessoas(sourceCode):
 
 def acessarPaginaAmigos(link):
     driver.get(link+str("/friends"))
+
+    print(driver.current_url)
+
     bancoDados.atualizarParaAmigosAnalisados(link)
     time.sleep(3);
 
