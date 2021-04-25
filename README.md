@@ -4,15 +4,16 @@ Furthermore you will be able to see people's informations with facial recognitio
 
 ## Requirement
 This app needs you install the following modules from PIP to work:
-- selenium
-- BeautifulSoup
-- configparser
-- sqlite3
+
+- [selenium](https://pypi.org/project/selenium/)
+- [BeautifulSoup](https://pypi.org/project/beautifulsoup4/)
+- [configparser](https://pypi.org/project/configparser/)
+- [sqlite3](https://pypi.org/project/db-sqlite3/)
 - progress (https://pypi.org/project/progress/)
 - flask (https://pypi.org/project/Flask/)
 
 ## Support
-Looking for help? Check out the instructions for getting support.
+Looking for help? Access the [issues page](https://github.com/hugohfsouza/GodEye/issues) and check if your question has not already been asked. If not, feel free to create a new card with your question.
 
 # How to use
 ### 1. CapturaProfile
