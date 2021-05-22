@@ -63,7 +63,7 @@ while(True):
     perfil = bancoDados.getProximaPessoa()
     if(perfil):
         person = "perfil-"+str(perfil[0])
-        # analisarDiretorio(person)
+        analisarDiretorio(person)
         finalizarProcesso(perfil[0], PATHPERFIS+person)
     else:
         print("aguardando proximo perfil pra ser analisado")
