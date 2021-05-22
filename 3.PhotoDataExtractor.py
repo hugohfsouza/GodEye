@@ -65,10 +65,10 @@ while(True):
         person = "perfil-"+str(perfil[0])
         analisarDiretorio(person)
         finalizarProcesso(perfil[0], PATHPERFIS+person)
+        time.sleep(2)
     else:
         print("aguardando proximo perfil pra ser analisado")
         time.sleep(10)
-    exit()
 
 
 

@@ -124,9 +124,15 @@ fazerLogin();
 
 while True:
     people = bancoDados.getProximoPerfilReconhecimento()
-    acessarPaginaFotos(people[0]);
-    capturarFotos(people[2], people[1]);
-
+    
     if not people[0]:
-        break
+        time.sleep(10)
+    else:
+        acessarPaginaFotos(people[0]);
+        capturarFotos(people[2], people[1]);
+        print(str(people[2])+" Concluido")
+
+
+
+    
 
