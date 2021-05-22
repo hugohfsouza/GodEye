@@ -2,6 +2,8 @@ import face_recognition
 import os
 from PIL import Image
 import numpy as np
+import time
+import shutil
 
 encodings   = []
 names       = []
@@ -49,13 +51,24 @@ def analisarDiretorio(person):
         except Exception as e:
             print(e)
 
+def finalizarProcesso(pessoa_id, person):
+    bancoDados.setDadosExtraidos(pessoa_id)
+    try:
+        shutil.rmtree(person)
+    except OSError as e:
+        print("erro ao excluir a pasta: "+str(person))
     
 
-
-
-for person in train_dir:
-    if(person != ".DS_Store" and person != ".gitkeep" ):
-        analisarDiretorio(person)
+while(True):
+    perfil = bancoDados.getProximaPessoa()
+    if(perfil):
+        person = "perfil-"+str(perfil[0])
+        # analisarDiretorio(person)
+        finalizarProcesso(perfil[0], PATHPERFIS+person)
+    else:
+        print("aguardando proximo perfil pra ser analisado")
+        time.sleep(10)
+    exit()
 
 
 

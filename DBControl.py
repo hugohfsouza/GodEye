@@ -63,3 +63,11 @@ class DBControl():
     def getInformations(self, id):
         people = self.cursor.execute("""SELECT nome, linkfacebook FROM pessoas where id = %s """, (id,))
         return self.cursor.fetchone();
+
+    def getProximaPessoa(self):
+        people = self.cursor.execute("""SELECT id FROM pessoas where fotoPerfilAnalisada = 1 and dadosExtraidos = 0 """)
+        return self.cursor.fetchone();
+
+    def setDadosExtraidos(self, pessoa_id):
+        self.cursor.execute("""UPDATE pessoas set dadosExtraidos = 1 where id = %s""", (pessoa_id,))
+        self.conn.commit() 
