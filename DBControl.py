@@ -15,7 +15,7 @@ class DBControl():
         )
         self.cursor = self.conn.cursor();
 
-        self.novoPerfil(Config.get('FacebookAccount', 'myName') ,  Config.get('FacebookAccount', 'myPerfil') )
+        # self.novoPerfil(Config.get('FacebookAccount', 'myName') ,  Config.get('FacebookAccount', 'myPerfil') )
 
     # PASSO 1
     def novoPerfil(self, nome, link):
@@ -59,3 +59,7 @@ class DBControl():
             arrayRetorno.append(linha)
 
         return arrayRetorno;
+
+    def getInformations(self, id):
+        people = self.cursor.execute("""SELECT nome, linkfacebook FROM pessoas where id = %s """, (id,))
+        return self.cursor.fetchone();

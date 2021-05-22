@@ -1,4 +1,4 @@
-from sklearn import svm
+
 import numpy as np
 import sys
 from io import BytesIO
@@ -14,10 +14,8 @@ from sklearn import svm
 from PIL import Image
 import base64, re
 import numpy as np
-
-
+import os
 import uuid
-# import json
 
 
 bancoDados = DBControl();
@@ -83,9 +81,9 @@ def reconhecer():
 
     try:
         os.remove(filename)
-    except:
-        pass
-
+    except Exception as inst:
+        print(inst)
+    
  
     for i in range(no):
         test_image_enc = face_recognition.face_encodings(imageSearch)[i]
@@ -93,7 +91,7 @@ def reconhecer():
 
         print(idPerfil[0])
         return app.response_class(
-            response=json.dumps({"data": {"id":1}}),
+            response=json.dumps({"data": {"id":int(idPerfil[0])}}),
             status=200,
             mimetype='application/json'
         )

@@ -1,13 +1,7 @@
 import face_recognition
-# from sklearn import svm
 import os
-# import sys
 from PIL import Image
-# import uuid
-# import json
-# import base64, re
 import numpy as np
-
 
 encodings   = []
 names       = []
@@ -31,7 +25,7 @@ def analisarDiretorio(person):
     for person_img in folderPerfil:
         try:
             if(person_img != ".DS_Store" and person_img != ".gitkeep" ):
-                print(person_img)
+                # print(person_img)
 
                 face = face_recognition.load_image_file(PATHPERFIS + person + "/" + person_img)
 
@@ -44,12 +38,12 @@ def analisarDiretorio(person):
                         dadoEmByte = face_enc.tobytes()
 
                         encodingInString = face_enc.tostring()
-
-                        # TO-DO -> Bloquear para que nao seja salvo duas vezes a mesma foto
                         bancoDados.salvarInformacoesFoto(codPerson(person), encodingInString)
 
-                        # print(np.fromstring(string, dtype=float))
-                        
+                    try:
+                        os.remove(PATHPERFIS + person + "/" + person_img)
+                    except Exception as inst:
+                        print(inst)       
                 except Exception as e:
                     print(e)
         except Exception as e:
