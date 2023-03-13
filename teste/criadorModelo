@@ -1,0 +1,52 @@
+import cv2
+import face_recognition
+
+# Passo 1 - Treinamento
+
+# Carrega as imagens de treinamento
+image_1 = face_recognition.load_image_file("./imagens/1_1.png")
+image_2 = face_recognition.load_image_file("./imagens/1_2.png")
+
+# Extrai as características dos rostos nas imagens de treinamento
+face_encoding_1 = face_recognition.face_encodings(image_1)[0]
+face_encoding_2 = face_recognition.face_encodings(image_2)[0]
+
+# Cria uma lista de características de rostos conhecidos
+known_face_encodings = [
+    face_encoding_1,
+    face_encoding_2
+]
+
+# Cria uma lista de nomes correspondentes aos rostos conhecidos
+known_face_names = [
+    "Hugo",
+    "Hugo"
+]
+
+# Passo 2 - Uso
+
+# Carrega a imagem a ser analisada
+image = cv2.imread("./imagens/teste.png")
+
+# Converte a imagem de BGR para RGB (o face_recognition usa o formato RGB)
+rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# Detecta os rostos na imagem
+face_locations = face_recognition.face_locations(rgb_image)
+
+# Extrai as características dos rostos encontrados
+face_encodings = face_recognition.face_encodings(rgb_image, face_locations)
+
+# Percorre todos os rostos encontrados
+for face_encoding, face_location in zip(face_encodings, face_locations):
+    # Compara as características do rosto encontrado com os rostos conhecidos
+    matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+
+    # Encontra o índice do rosto conhecido com a maior similaridade com o rosto encontrado
+    face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+    best_match_index = np.argmin(face_distances)
+
+    # Se o rosto encontrado pertence a um rosto conhecido, imprime o nome correspondente
+    if matches[best_match_index]:
+        name = known_face_names[best_match_index]
+        print("Rosto de {} encontrado na posição {}.".format(name, face_location))

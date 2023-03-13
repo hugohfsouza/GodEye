@@ -13,62 +13,61 @@ class DBControl():
             host        = Config.get('MYSQL', 'host'),
             database    = Config.get('MYSQL', 'database')
         )
-        self.cursor = self.conn.cursor();
-
-        # self.novoPerfil(Config.get('FacebookAccount', 'myName') ,  Config.get('FacebookAccount', 'myPerfil') )
-
-    # PASSO 1
-    def novoPerfil(self, nome, link):
-        try:
-            self.cursor.execute("""INSERT INTO pessoas (nome, linkFacebook) VALUES (%s,%s)""", (nome, link) )
-            self.conn.commit()  
-        except:
-            print("erro ao inserir novo perfil")
-
-    def atualizarParaAmigosAnalisados(self, link):
-        self.cursor.execute("""UPDATE pessoas SET novo = 0 WHERE linkFacebook = %s """, (link, ) )
-        self.conn.commit()
-
-    def getProximoPerfilReconhecimento(self):
-        linhas = self.cursor.execute("""SELECT linkFacebook FROM pessoas where novo = 1 limit 1;""")
-        return self.cursor.fetchone()
+        self.cursor = self.conn.cursor(dictionary=True);
 
 
+    # # PASSO 1
+    # def novoPerfil(self, nome, link):
+    #     try:
+    #         self.cursor.execute("""INSERT INTO pessoas (nome, linkFacebook) VALUES (%s,%s)""", (nome, link) )
+    #         self.conn.commit()  
+    #     except:
+    #         print("erro ao inserir novo perfil")
 
-    # PASSO 2
-    def getProximoPerfilReconhecimento(self):
-        linhas = self.cursor.execute("""SELECT linkFacebook, id, nome FROM pessoas where fotoPerfilAnalisada = 0 limit 1; """)
-        return self.cursor.fetchone()
+    # def atualizarParaAmigosAnalisados(self, link):
+    #     self.cursor.execute("""UPDATE pessoas SET novo = 0 WHERE linkFacebook = %s """, (link, ) )
+    #     self.conn.commit()
 
-    def atualizarParaBuscando(self, link):
-        self.cursor.execute("""UPDATE pessoas SET fotoPerfilAnalisada = 1 WHERE linkFacebook = %s """, (link,) )
-        self.conn.commit()
-
-
-    # PASSO 3
-    def salvarInformacoesFoto(self, pessoa_id, dataInString):
-        self.cursor.execute("""INSERT INTO reconhecimentos (pessoa_id, dados_imagem) VALUES (%s,%s)""", (pessoa_id, dataInString) )
-        self.conn.commit()  
+    # def getProximoPerfilReconhecimento(self):
+    #     linhas = self.cursor.execute("""SELECT linkFacebook FROM pessoas where novo = 1 limit 1;""")
+    #     return self.cursor.fetchone()
 
 
-    # PASSO 4
-    def getFaceData(self):
-        arrayRetorno = [];
-        linhas = self.cursor.execute("""SELECT id, pessoa_id, dados_imagem FROM reconhecimentos; """)
-        for linha in self.cursor.fetchall():
-            arrayRetorno.append(linha)
 
-        return arrayRetorno;
+    # # PASSO 2
+    # def getProximoPerfilReconhecimento(self):
+    #     linhas = self.cursor.execute("""SELECT linkFacebook, id, nome FROM pessoas where fotoPerfilAnalisada = 0 limit 1; """)
+    #     return self.cursor.fetchone()
 
-    def getInformations(self, id):
-        people = self.cursor.execute("""SELECT nome, linkfacebook FROM pessoas where id = %s """, (id,))
-        return self.cursor.fetchone();
+    # def atualizarParaBuscando(self, link):
+    #     self.cursor.execute("""UPDATE pessoas SET fotoPerfilAnalisada = 1 WHERE linkFacebook = %s """, (link,) )
+    #     self.conn.commit()
 
-    def getProximaPessoa(self):
-        people = self.cursor.execute("""SELECT id FROM pessoas where fotoPerfilAnalisada = 1 and dadosExtraidos = 0 limit 1""")
-        return self.cursor.fetchone();
 
-    def setDadosExtraidos(self, pessoa_id):
-        self.cursor.reset()
-        self.cursor.execute("UPDATE pessoas set dadosExtraidos = 1 where id = "+str(pessoa_id))
-        self.conn.commit() 
+    # # PASSO 3
+    # def salvarInformacoesFoto(self, pessoa_id, dataInString):
+    #     self.cursor.execute("""INSERT INTO reconhecimentos (pessoa_id, dados_imagem) VALUES (%s,%s)""", (pessoa_id, dataInString) )
+    #     self.conn.commit()  
+
+
+    # # PASSO 4
+    # def getFaceData(self):
+    #     arrayRetorno = [];
+    #     linhas = self.cursor.execute("""SELECT id, pessoa_id, dados_imagem FROM reconhecimentos; """)
+    #     for linha in self.cursor.fetchall():
+    #         arrayRetorno.append(linha)
+
+    #     return arrayRetorno;
+
+    # def getInformations(self, id):
+    #     people = self.cursor.execute("""SELECT nome, linkfacebook FROM pessoas where id = %s """, (id,))
+    #     return self.cursor.fetchone();
+
+    # def getProximaPessoa(self):
+    #     people = self.cursor.execute("""SELECT id FROM pessoas where fotoPerfilAnalisada = 1 and dadosExtraidos = 0 limit 1""")
+    #     return self.cursor.fetchone();
+
+    # def setDadosExtraidos(self, pessoa_id):
+    #     self.cursor.reset()
+    #     self.cursor.execute("UPDATE pessoas set dadosExtraidos = 1 where id = "+str(pessoa_id))
+    #     self.conn.commit() 

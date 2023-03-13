@@ -1,50 +1,72 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import time
 from bs4 import BeautifulSoup
-
 from DBControl import DBControl
-
 import configparser
 
 Config = configparser.ConfigParser()
 Config.read("./config.ini")
 
 # CONFIGS
-PATH        = Config.get('Selenium', 'folderDriveSelenium')
-EMAIL       = Config.get('FacebookAccount', 'email')
-PASSWORD    = Config.get('FacebookAccount', 'password')
-NUMBSCROLL  = int(Config.get('Application', 'scroll'))
+PATH            = Config.get('Selenium', 'folderDriveSelenium')
+EMAIL           = Config.get('FacebookAccount', 'email')
+PASSWORD        = Config.get('FacebookAccount', 'password')
+NUMBSCROLL      = int(Config.get('Application', 'scroll'))
+PERFIL_INICIAL  = Config.get('FacebookAccount', 'myPerfil')
 
 # Conexao com Banco
-bancoDados = DBControl();
+conexaobancoDados = DBControl();
+
+useScrollOnFriendsPage= True
+
+
+if(PATH):
+    driver = webdriver.Chrome(PATH)
+else:
+    driver = webdriver.Chrome()
+
+
+
+
 
 def fazerLogin():
-    elem = driver.find_element_by_name("email")
+    elem = driver.find_element(By.NAME, 'email')
     elem.clear()
     elem.send_keys(EMAIL)
-    elem = driver.find_element_by_name("pass")
+    elem = driver.find_element(By.NAME, 'pass')
     elem.clear()
     elem.send_keys(PASSWORD)
     elem.send_keys(Keys.RETURN)
     time.sleep(10)
 
+def perfilJaExiste(linkPerfil):
+    linhas = conexaobancoDados.cursor.execute("""SELECT 1 FROM pessoas where linkFacebook = %s limit 1;""", (linkPerfil,))
+    item = conexaobancoDados.cursor.fetchone()
+    
+    if(item == None):
+        return True
+    else:
+        return False
+    
+
+
 def recuperarPessoas(sourceCode):
     soup        = BeautifulSoup(sourceCode, 'html.parser')
-    listaAmigos = soup.find_all("div", class_="bp9cbjyn ue3kfks5 pw54ja7n uo3d90p7 l82x9zwi n1f8r23x rq0escxv j83agx80 bi6gxh9e discj3wi hv4rvrfc ihqw7lf3 dati1w0a gfomwglr")
+    listaAmigos = soup.find_all("div", class_="x1iyjqo2 x1pi30zi")
 
     for htmlPessoa in listaAmigos:
-        try:
-            amigo       = BeautifulSoup(str(htmlPessoa), 'html.parser')
-            nomeELink   = amigo.find("a", class_="oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gmql0nx0 gpro0wi8")
+        amigo       = BeautifulSoup(str(htmlPessoa), 'html.parser')
+        
+        linkPerfil   = amigo.select("a")[0]['href']
+        nome        = amigo.select("span")[0].text
 
-            bancoDados.novoPerfil(
-                nomeELink.get_text(),
-                nomeELink.get('href')
-            )
+        if(perfilJaExiste(linkPerfil)):
+            conexaobancoDados.cursor.execute("""INSERT INTO pessoas (nomePerfil, linkFacebook) VALUES (%s,%s)""", (nome, linkPerfil) )
+            conexaobancoDados.conn.commit()
+            print("adicionado " + nome)
 
-        except:
-            print("error");
 
 def acessarPaginaAmigos(link):
     if('profile.php?id=' in link):
@@ -53,27 +75,43 @@ def acessarPaginaAmigos(link):
         driver.get(link+str("/friends"))
 
     print(driver.current_url)
-
-    bancoDados.atualizarParaAmigosAnalisados(link)
     time.sleep(3);
 
-    for x in range(0,NUMBSCROLL):
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(0.5);
+    if(useScrollOnFriendsPage):
+        for x in range(0,NUMBSCROLL):
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(0.5);
 
-driver = webdriver.Chrome(PATH)
+
+def proximoPerfil():
+    linhas = conexaobancoDados.cursor.execute("""SELECT id, linkFacebook FROM pessoas where status = 'novo' limit 1;""")
+    item = conexaobancoDados.cursor.fetchone()
+    
+    if(item == None):
+        return PERFIL_INICIAL
+    else:
+        return item['linkFacebook'], item['id']
+
+
+def atualizaPerfil(id):
+    conexaobancoDados.cursor.execute("""UPDATE pessoas set status='amigos-extraidos' where id = %s""", (id, ) )
+    conexaobancoDados.conn.commit()
+
 driver.get("http://www.facebook.com.br")
 fazerLogin();
 
 while True:
-    link = bancoDados.getProximoPerfil()
-    acessarPaginaAmigos(link[0]);
+    link, id = proximoPerfil()
+    acessarPaginaAmigos(link);
+   
 
     # Capturando os amigos
-    elem = driver.find_element_by_xpath("//*")
+    elem = driver.find_element(By.XPATH, '//*')
     source_code = elem.get_attribute("outerHTML")
     recuperarPessoas(source_code);
-    
+
+    atualizaPerfil(id)
+
     if not link:
         break
 
