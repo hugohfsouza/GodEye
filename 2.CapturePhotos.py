@@ -1,20 +1,16 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 import time
 import os
 import requests
 import shutil
 from bs4 import BeautifulSoup
-
 from DBControl import DBControl
-
 from PIL import Image
-import face_recognition
-from sklearn import svm
 import uuid
 import configparser
 
-import threading
 
 Config = configparser.ConfigParser()
 Config.read("./config.ini")
@@ -24,115 +20,115 @@ PATH        = Config.get('Selenium', 'folderDriveSelenium')
 EMAIL       = Config.get('FacebookAccount', 'email')
 PASSWORD    = Config.get('FacebookAccount', 'password')
 NUMBSCROLL  = int(Config.get('Application', 'scroll'))
-
-FOLDER = Config.get('Application', 'folderAllPerfil')
+FOLDER      = Config.get('Application', 'folderAllPerfil')
 
 # Conexao com Banco
-bancoDados = DBControl();
+conexaobancoDados = DBControl();
+
+if(PATH):
+    driver = webdriver.Chrome(PATH)
+else:
+    driver = webdriver.Chrome()
+
 
 def fazerLogin():
-    elem = driver.find_element_by_name("email")
+    elem = driver.find_element(By.NAME, 'email')
     elem.clear()
     elem.send_keys(EMAIL)
-    elem = driver.find_element_by_name("pass")
+    elem = driver.find_element(By.NAME, 'pass')
     elem.clear()
     elem.send_keys(PASSWORD)
     elem.send_keys(Keys.RETURN)
     time.sleep(10)
+
+
+def proximoPerfil():
+    linhas = conexaobancoDados.cursor.execute("""SELECT id, linkFacebook FROM pessoas where status = 'amigos-extraidos' limit 1;""")
+    item = conexaobancoDados.cursor.fetchone()
+    
+    return item['linkFacebook'], item['id']
 
 def acessarPaginaFotos(link):
 
     if('profile.php?id=' in link):
         driver.get(link+str("&sk=photos"))
     else:
-        driver.get(link+str("/photos_all"))
-    bancoDados.atualizarParaBuscando(link)
+        driver.get(link+str("/photos_albums"))
+
+    elem        = driver.find_element(By.XPATH, '//*')
+    sourceCode  = elem.get_attribute("outerHTML")
+    soup        = BeautifulSoup(sourceCode, 'html.parser')
+    albuns       = soup.find_all("div", class_="x9f619 x1r8uery x1iyjqo2 x6ikm8r x10wlt62 x1n2onr6")
+    linkAlbumPessoal = ""
+    for album in albuns:
+        tagA = album.select("a")
+        achouAlbumPerfil = 0
+        if len(tagA) > 0:
+            tagsSpan = album.select("span")
+            for tagSpan in tagsSpan:
+                if(tagSpan.text == "Fotos do perfil"):
+                    achouAlbumPerfil = 1
+                    linkAlbumPessoal = tagA[0]['href']
+
+    if linkAlbumPessoal != "":
+        driver.get(linkAlbumPessoal)
+
     
-    time.sleep(1);
-    for x in range(0,NUMBSCROLL):
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1);
+        for x in range(0,NUMBSCROLL):
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(1);
 
-def criarPastaPerfil(nome, id):
-    pasta = FOLDER+str(id)
+def criarPastaPerfil(id):
+    pasta = FOLDER+"/"+str(id)
 
-    if not  os.path.isdir(pasta):
+    if not os.path.isdir(pasta):
         os.mkdir(pasta)
 
-def saveImages(imageList, id, nome, tagLink):
-    criarPastaPerfil(nome, id)
-    total = 0;
+def saveImages(imageList, idPessoa):
+    criarPastaPerfil(idPessoa)
 
-    try:
-        for foto in imageList:
-            if(total <= 100):
-                total = total+1
-                if(foto.get('preserveaspectratio') == "xMidYMid slice" and foto.get('style') == "height: 168px; width: 168px;"):
-                    filename                = "main.jpg"
-                else:
-                    filename                = str(uuid.uuid4())+".jpg"
-            
-                try:
-                    r                       = requests.get(foto.get(tagLink), stream = True)
-                    r.raw.decode_content    = True
+    for foto in imageList:
+        tagImage = foto.find_all("img")
+        if len(tagImage) > 0:
+            filename = FOLDER+"/"+str(idPessoa)+"/"+str(uuid.uuid4())+".jpg"
+            r = requests.get(tagImage[0].get("src"), stream = True)
+            r.raw.decode_content    = True
 
-                    with open(filename,'wb') as f:
-                        shutil.copyfileobj(r.raw, f)
+            with open(filename,'wb') as f:
+                shutil.copyfileobj(r.raw, f)
 
-                    image           = face_recognition.load_image_file(filename)
-                    face_locations  = face_recognition.face_locations(image)
+    atualizaPerfil(idPessoa)
 
-                    for face_location in face_locations:
-                        pasta = FOLDER+str(id)+"/"+filename
 
-                        top, right, bottom, left = face_location
-                        face_image = image[top:bottom, left:right]
-                        pil_image = Image.fromarray(face_image)
-                        
-                        
-                        pil_image.save(pasta, "PNG")
-                except Exception as e:
-                    print("error")
-                    pass
-                    
-                try:
-                    os.remove(filename)
-                except Exception as e:
-                    print("error")
-                    pass
 
-    except Exception as e:
-        print("error")
-        pass
+def atualizaPerfil(id):
+    conexaobancoDados.cursor.execute("""UPDATE pessoas set status='fotos-extraidas' where id = %s""", (id, ) )
+    conexaobancoDados.conn.commit() 
+ 
 
-def capturarFotos(nome, id):
-    time.sleep(3)
-    elem = driver.find_element_by_xpath("//*")
-    source_code = elem.get_attribute("outerHTML")
-    soup        = BeautifulSoup(source_code, 'html.parser')
+def capturarFotos(idPessoa):
+    time.sleep(6)
+    elem        = driver.find_element(By.XPATH, '//*')
+    sourceCode  = elem.get_attribute("outerHTML")
+    soup        = BeautifulSoup(sourceCode, 'html.parser')
+    imageListImg = soup.find_all("div", class_="x1vtvx1t x6ffb70 x1e56ztr x1emribx x1n2onr6")
     
-    mageListImg = soup.find_all("img")
-    print(len(mageListImg))
+    saveImages(imageListImg, idPessoa)
 
-    saveImages(mageListImg, id, nome, "src")
+    # atualizaPerfil(idPessoa)
 
 
     
-driver = webdriver.Chrome(PATH)
 driver.get("http://www.facebook.com.br")
 fazerLogin();
 
 while True:
-    people = bancoDados.getProximoPerfilReconhecimento()
-    
-    if not people[0]:
-        time.sleep(10)
+    linkFacebook, idPessoa = proximoPerfil()
+
+    if not linkFacebook:
+        exit()
     else:
-        acessarPaginaFotos(people[0]);
-        capturarFotos(people[2], people[1]);
-        print(str(people[2])+" Concluido")
-
-
-
-    
-
+        acessarPaginaFotos(linkFacebook);
+        capturarFotos(idPessoa);
+        
